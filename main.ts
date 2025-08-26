@@ -64,7 +64,7 @@ controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
         music.play(music.createSoundEffect(WaveShape.Square, 1600, 1, 255, 0, 200, SoundExpressionEffect.None, InterpolationCurve.Curve), music.PlaybackMode.InBackground)
         projectile.x += 7
         timer.after(600, function () {
-            sprites.destroy(projectile)
+            sprites.destroyAllSpritesOfKind(SpriteKind.Projectile)
             controller.moveSprite(mySprite, 50, 0)
         })
     } else {
@@ -124,7 +124,7 @@ controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
         music.play(music.createSoundEffect(WaveShape.Square, 1600, 1, 255, 0, 200, SoundExpressionEffect.None, InterpolationCurve.Curve), music.PlaybackMode.InBackground)
         projectile.x += -7
         timer.after(600, function () {
-            sprites.destroy(projectile)
+            sprites.destroyAllSpritesOfKind(SpriteKind.Projectile)
             controller.moveSprite(mySprite, 50, 0)
         })
     }
