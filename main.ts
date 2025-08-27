@@ -182,6 +182,7 @@ let projectile: Sprite = null
 let statusbar: StatusBarSprite = null
 let mySprite: Sprite = null
 let face = 0
+let move = 1
 info.setLife(5)
 profilelife.setMaxLife(5)
 face = 0
@@ -329,6 +330,17 @@ let boss1 = sprites.create(img`
 boss1.setPosition(20, 20)
 statusbar = statusbars.create(20, 4, StatusBarKind.Health)
 statusbar.attachToSprite(boss1)
+game.onUpdate(function () {
+    if (move == 1) {
+        if (mySprite.x > boss1.x) {
+            boss1.vx = 30
+        } else {
+            boss1.vx = -30
+        }
+    } else {
+        boss1.setVelocity(0, 0)
+    }
+})
 game.onUpdateInterval(5000, function () {
     projectile2 = sprites.createProjectileFromSprite(img`
         . . . . . . . . . . . . . . . . 
@@ -431,185 +443,136 @@ game.onUpdateInterval(5000, function () {
     projectile2.setKind(SpriteKind.Text)
     projectile2.y += 12
 })
-game.onUpdateInterval(400, function () {
-    if (mySprite.x > boss1.x) {
-        boss1.vx = 30
-        animation.runImageAnimation(
-        boss1,
-        [img`
-            f f f . . . . . . . . f f f . . 
-            c b b c f . . . . . . c c f f . 
-            . c b b c f . . . . . . c c f f 
-            . c c c b f . . . . . . c f c f 
-            . c c b b c f . c c . c c f f f 
-            . c b b c b f c c 3 c c 3 c f f 
-            . c b c c b f c b 3 c b 3 b f f 
-            . . c c c b b c b b b b b b c . 
-            . . . c c c c b b 1 b b b 1 c . 
-            . . . . c c b b b b b b b b b c 
-            . . . . f b b b b c b b b c b c 
-            . . . c f b b b b 1 f f f 1 b f 
-            . . c c f b b b b b b b b b b f 
-            . . . . f c b b b b b b b b f . 
-            . . . . . f c b b b b b b f . . 
-            . . . . . . f f f f f f f . . . 
-            `,img`
-            . . . . . . . . . . . f f f . . 
-            f f f . . . . . . . . c c f f f 
-            c b b c f . . . c c . . c c f f 
-            . c b b b f f c c 3 c c 3 c f f 
-            . c c c b b f c b 3 c b 3 b f f 
-            . c c b c b f c b b b b b b c . 
-            . c b b c b b c b b b b b b c . 
-            . c b c c c b b b 1 b b b 1 b c 
-            . . c c c c c b b b b b b b b c 
-            . . . c f b b b b c b b b c b f 
-            . . c c f b b b b 1 f f f 1 b f 
-            . . . . f c b b b b b b b b f . 
-            . . . . . f c b b b b b b f . . 
-            . . . . . . f f f f f f f . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            `,img`
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . c c . . c c . . 
-            . . . . . . c c c 3 c c 3 c . . 
-            . . . . . c c c b 3 c b 3 b c . 
-            . . . . f f b b b b b b b b c . 
-            . . . . f f b b b b b b b b c c 
-            . . . f f f c b b 1 b b b 1 b c 
-            . . . f f f f b b b b b b b b c 
-            . . . b b b c c b c b b b c b f 
-            . . . c c c c f b 1 f f f 1 b f 
-            . . . c c b b f b b b b b b f . 
-            . . . c b b c c b b b b b f c c 
-            . . c b b c c f f f f f f c c c 
-            . c c c c c . . . . . . c c c . 
-            c c c c . . . . . . . c c c . . 
-            . . . . . . . . . . . . . . . . 
-            `,img`
-            . f f f . . . . . . . . f f f . 
-            . c b b c f . . . . . . . c f f 
-            . . c b b c f . . . . . . c c f 
-            . . c c c b f . . . . . . . f c 
-            . . c c b b f f . . . . . f f c 
-            . . c b b c b f c c . c c f f f 
-            . . c b c c b f c c c c c f f f 
-            . . . c c c b c b 3 c c 3 c f . 
-            . . . c c c c b b 3 c b 3 b c . 
-            . . . . c c b b b b b b b b c c 
-            . . . c f b b b b 1 b b b 1 b c 
-            . . c c f b b b b b b b b b b f 
-            . . . . f b b b b c b b b c b f 
-            . . . . f c b b b 1 f f f 1 f . 
-            . . . . . f c b b b b b b f . . 
-            . . . . . . f f f f f f f . . . 
-            `],
-        100,
-        false
-        )
-    } else {
-        boss1.vx = -30
-        animation.runImageAnimation(
-        boss1,
-        [img`
-            . . f f f . . . . . . . . f f f 
-            . f f c c . . . . . . f c b b c 
-            f f c c . . . . . . f c b b c . 
-            f c f c . . . . . . f b c c c . 
-            f f f c c . c c . f c b b c c . 
-            f f c 3 c c 3 c c f b c b b c . 
-            f f b 3 b c 3 b c f b c c b c . 
-            . c b b b b b b c b b c c c . . 
-            . c 1 b b b 1 b b c c c c . . . 
-            c b b b b b b b b b c c . . . . 
-            c b c b b b c b b b b f . . . . 
-            f b 1 f f f 1 b b b b f c . . . 
-            f b b b b b b b b b b f c c . . 
-            . f b b b b b b b b c f . . . . 
-            . . f b b b b b b c f . . . . . 
-            . . . f f f f f f f . . . . . . 
-            `,img`
-            . . f f f . . . . . . . . . . . 
-            f f f c c . . . . . . . . f f f 
-            f f c c . . c c . . . f c b b c 
-            f f c 3 c c 3 c c f f b b b c . 
-            f f b 3 b c 3 b c f b b c c c . 
-            . c b b b b b b c f b c b c c . 
-            . c b b b b b b c b b c b b c . 
-            c b 1 b b b 1 b b b c c c b c . 
-            c b b b b b b b b c c c c c . . 
-            f b c b b b c b b b b f c . . . 
-            f b 1 f f f 1 b b b b f c c . . 
-            . f b b b b b b b b c f . . . . 
-            . . f b b b b b b c f . . . . . 
-            . . . f f f f f f f . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            `,img`
-            . . . . . . . . . . . . . . . . 
-            . . c c . . c c . . . . . . . . 
-            . . c 3 c c 3 c c c . . . . . . 
-            . c b 3 b c 3 b c c c . . . . . 
-            . c b b b b b b b b f f . . . . 
-            c c b b b b b b b b f f . . . . 
-            c b 1 b b b 1 b b c f f f . . . 
-            c b b b b b b b b f f f f . . . 
-            f b c b b b c b c c b b b . . . 
-            f b 1 f f f 1 b f c c c c . . . 
-            . f b b b b b b f b b c c . . . 
-            c c f b b b b b c c b b c . . . 
-            c c c f f f f f f c c b b c . . 
-            . c c c . . . . . . c c c c c . 
-            . . c c c . . . . . . . c c c c 
-            . . . . . . . . . . . . . . . . 
-            `,img`
-            . f f f . . . . . . . . f f f . 
-            f f c . . . . . . . f c b b c . 
-            f c c . . . . . . f c b b c . . 
-            c f . . . . . . . f b c c c . . 
-            c f f . . . . . f f b b c c . . 
-            f f f c c . c c f b c b b c . . 
-            f f f c c c c c f b c c b c . . 
-            . f c 3 c c 3 b c b c c c . . . 
-            . c b 3 b c 3 b b c c c c . . . 
-            c c b b b b b b b b c c . . . . 
-            c b 1 b b b 1 b b b b f c . . . 
-            f b b b b b b b b b b f c c . . 
-            f b c b b b c b b b b f . . . . 
-            . f 1 f f f 1 b b b c f . . . . 
-            . . f b b b b b b c f . . . . . 
-            . . . f f f f f f f . . . . . . 
-            `],
-        100,
-        false
-        )
-    }
-})
 game.onUpdateInterval(10000, function () {
-    animation.stopAnimation(animation.AnimationTypes.All, boss1)
-    boss1.setImage(img`
-        . . f f f . . . . . . . . . . . 
-        f f f c c . . . . . . . . f f f 
-        f f c c . . c c . . . f c b b c 
-        f f c 3 c c 3 c c f f b b b c . 
-        f f b 3 b c 3 b c f b b c c c . 
-        . c 1 b b b 1 b c f b c b c c . 
-        . c b b b b b b c b b c b b c . 
-        c b c b b b c b b b c c c b c . 
-        c b 1 f f f 1 b b c c c c c . . 
-        f b b b b b b b b b b f c . . . 
-        f b b b b b b b b b b f c c . . 
-        . f b b b b b b b b c f . . . . 
-        . . f b b b b b b c f . . . . . 
-        . . . f f f f f f f . . . . . . 
+    animation.runImageAnimation(
+    boss1,
+    [img`
+        f f f . . . . . . . . f f f . . 
+        c b b c f . . . . . . c c f f . 
+        . c b b c f . . . . . . c c f f 
+        . c c c b f . . . . . . c f c f 
+        . c c b b c f . c c . c c f f f 
+        . c b b c b f c c 3 c c 3 c f f 
+        . c b c c b f c b 3 c b 3 b f f 
+        . . c c c b b c b 1 b b b 1 c . 
+        . . . c c c c b b 1 b b b 1 c . 
+        . . . . c c b b b b b b b b b c 
+        . . . . f b b b b c 1 f f 1 b c 
+        . . . c f b b b b f 1 f f 1 f f 
+        . . c c f b b b b f 2 2 2 2 f f 
+        . . . . f c b b b b 2 2 2 2 f . 
+        . . . . . f c b b b b b b f . . 
+        . . . . . . f f f f f f f . . . 
+        `,img`
+        f f f . . . . . . . . f f f . . 
+        c b b c f . . . . . . c c f f . 
+        . c b b c f . . . . . . c c f f 
+        . c c c b f . . . . . . c f c f 
+        . c c b b c f . c c . c c f f f 
+        . c b b c b f c c 3 c c 3 c f f 
+        . c b c c b f c b 3 c b 3 b f f 
+        . . c c c b b c b 1 b b b 1 c . 
+        . . . c c c c b b 1 b b b 1 c . 
+        . . . . c c b b b b b b b b b c 
+        . . . . f b b b b c 1 f f 1 b c 
+        . . . c f b b b b f 1 f f 1 f f 
+        . . c c f b b b b f 2 2 2 2 f f 
+        . . . . f c b b b b 2 2 2 2 f . 
+        . . . . . f c b b b b b b f . . 
+        . . . . . . f f f f f f f . . . 
+        `,img`
+        . . . . . . . . . . . f f f . . 
+        f f f . . . . . . . . c c f f f 
+        c b b c f . . . c c . c c c f f 
+        . c b b b f f c c 3 c c 3 c f f 
+        . c c c b b f c b 3 c b 3 c f f 
+        . c c b c b f c b b b b b b c f 
+        . c b b c b b c b 1 b b b 1 c c 
+        . c b c c c b b b b b b b b b c 
+        . . c c c c c b b c 1 f f 1 b c 
+        . . . c f b b b b f 1 f f 1 f c 
+        . . . c f b b b b f f f f f f f 
+        . . c c f b b b b f 2 2 2 2 f f 
+        . . . . f c b b b 2 2 2 2 2 f . 
+        . . . . . f c b b b 2 2 2 f . . 
+        . . . . . . f f f f f f f . . . 
+        . . . . . . . . . . . . . . . . 
+        `,img`
+        . . . . . . . . . . . f f f . . 
+        f f f . . . . . . . . c c f f f 
+        c b b c f . . . c c . c c c f f 
+        . c b b b f f c c 3 c c 3 c f f 
+        . c c c b b f c b 3 c b 3 c f f 
+        . c c b c b f c b b b b b b c f 
+        . c b b c b b c b 1 b b b 1 c c 
+        . c b c c c b b b b b b b b b c 
+        . . c c c c c b b c 1 f f 1 b c 
+        . . . c f b b b b f 1 f f 1 f c 
+        . . . c f b b b b f f f f f f f 
+        . . c c f b b b b f 2 2 2 2 f f 
+        . . . . f c b b b 2 2 2 2 2 f . 
+        . . . . . f c b b b 2 2 2 f . . 
+        . . . . . . f f f f f f f . . . 
+        . . . . . . . . . . . . . . . . 
+        `,img`
+        . . . . . . . . . . . f f f . . 
+        f f f . . . . . . . . c c f f f 
+        c b b c f . . . c c . c c c f f 
+        . c b b b f f c c 3 c c 3 c f f 
+        . c c c b b f c b 3 c b 3 c f f 
+        . c c b c b f c b b b b b b c f 
+        . c b b c b b c b 1 b b b 1 c c 
+        . c b c c c b b b b b b b b b c 
+        . . c c c c c b b c 1 f f 1 b c 
+        . . . c f b b b b f 1 f f 1 f c 
+        . . . c f b b b b f f f f f f f 
+        . . c c f b b b b f 2 2 2 2 f f 
+        . . . . f c b b b 2 2 2 2 2 f . 
+        . . . . . f c b b b 2 2 2 f . . 
+        . . . . . . f f f f f f f . . . 
+        . . . . . . . . . . . . . . . . 
+        `,img`
         . . . . . . . . . . . . . . . . 
         . . . . . . . . . . . . . . . . 
-        `)
+        . . . . . . . . c c . c c . . . 
+        . . . . . . c c c 3 c c 3 f . . 
+        . . . . . c c c b 3 c b 3 c f . 
+        . . . . f f b b b b b b b b c f 
+        . . . . f f b b b 1 b b b 1 c c 
+        . . . f f f c b b b b b b b b c 
+        . . . f f f f b b c 1 f f 1 b c 
+        . . . b b b c c b f 1 f f 1 f f 
+        . . . c c c c f b f f f f f f f 
+        . . c c c b b f b f 2 2 2 2 f f 
+        . . . c b b c c b 2 2 2 2 2 f . 
+        . . c b b c c f f b 2 2 2 f . . 
+        . c c c c c f f f f f f f . . . 
+        c c c c . . . . . . . . . . . . 
+        `,img`
+        . f f f . . . . . . . . f f f . 
+        . c b b c f . . . . . . . c f f 
+        . . c b b c f . . . . . . c c f 
+        . . c c c b f . . . . . . . f c 
+        . . c c b b f f . . . . . f f c 
+        . . c b b c b f c c . c c f f f 
+        . . c b c c b f c c c c c f f f 
+        . . . c c c b c b 3 c c 3 c f . 
+        . . . c c c c b b 3 c b 3 b c . 
+        . . . . c c b b b b b b b b c c 
+        . . . c f b b b 1 1 b b b 1 1 c 
+        . . c c f b b b b b b b b b b f 
+        . . . . f b b b b c b b b c b f 
+        . . . . f c b b b 1 f f f 1 f . 
+        . . . . . f c b b b b b b f . . 
+        . . . . . . f f f f f f f . . . 
+        `],
+    100,
+    false
+    )
     timer.after(700, function () {
-        boss1.ay = 700
+        move = 0
+        boss1.y = 110
         timer.after(1000, function () {
-            boss1.ay = 0
             projectile2 = sprites.createProjectileFromSprite(img`
                 . . . . . . . . . . . . . . . . 
                 . . . . . . . . . . . . . . . . 
@@ -652,6 +615,7 @@ game.onUpdateInterval(10000, function () {
             projectile2.x += 12
             timer.after(2000, function () {
                 boss1.y = 20
+                move = 1
             })
         })
     })
