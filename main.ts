@@ -1,21 +1,3 @@
-namespace SpriteKind {
-    export const boss = SpriteKind.create()
-}
-sprites.onOverlap(SpriteKind.Player, SpriteKind.boss, function (sprite, otherSprite) {
-    info.changeLifeBy(-1)
-    scene.cameraShake(2, 500)
-    mySprite.setFlag(SpriteFlag.GhostThroughSprites, true)
-    for (let index = 0; index < 5; index++) {
-        mySprite.setFlag(SpriteFlag.Invisible, true)
-        pause(100)
-        timer.after(100, function () {
-            mySprite.setFlag(SpriteFlag.Invisible, false)
-        })
-        timer.after(700, function () {
-            mySprite.setFlag(SpriteFlag.GhostThroughSprites, false)
-        })
-    }
-})
 controller.B.onEvent(ControllerButtonEvent.Pressed, function () {
     if (mySprite.isHittingTile(CollisionDirection.Bottom)) {
         mySprite.vy = -90
@@ -150,6 +132,10 @@ controller.left.onEvent(ControllerButtonEvent.Pressed, function () {
     characterAnimations.setCharacterState(mySprite, characterAnimations.rule(Predicate.FacingLeft, Predicate.MovingLeft))
     face = 0
 })
+sprites.onOverlap(SpriteKind.Enemy, SpriteKind.Projectile, function (sprite, otherSprite) {
+    statusbar.value += -5
+    sprites.destroy(otherSprite, effects.halo, 500)
+})
 controller.right.onEvent(ControllerButtonEvent.Released, function () {
     characterAnimations.setCharacterState(mySprite, characterAnimations.rule(Predicate.NotMoving, Predicate.FacingRight))
 })
@@ -160,7 +146,22 @@ controller.right.onEvent(ControllerButtonEvent.Pressed, function () {
     characterAnimations.setCharacterState(mySprite, characterAnimations.rule(Predicate.FacingRight, Predicate.MovingRight))
     face = 1
 })
-sprites.onOverlap(SpriteKind.Player, SpriteKind.Projectile, function (sprite, otherSprite) {
+sprites.onOverlap(SpriteKind.Player, SpriteKind.Enemy, function (sprite, otherSprite) {
+    info.changeLifeBy(-1)
+    scene.cameraShake(2, 500)
+    mySprite.setFlag(SpriteFlag.GhostThroughSprites, true)
+    for (let index = 0; index < 5; index++) {
+        mySprite.setFlag(SpriteFlag.Invisible, true)
+        pause(100)
+        timer.after(100, function () {
+            mySprite.setFlag(SpriteFlag.Invisible, false)
+        })
+        timer.after(700, function () {
+            mySprite.setFlag(SpriteFlag.GhostThroughSprites, false)
+        })
+    }
+})
+sprites.onOverlap(SpriteKind.Player, SpriteKind.Text, function (sprite, otherSprite) {
     sprites.destroy(otherSprite)
     info.changeLifeBy(-1)
     scene.cameraShake(2, 500)
@@ -178,6 +179,7 @@ sprites.onOverlap(SpriteKind.Player, SpriteKind.Projectile, function (sprite, ot
 })
 let projectile2: Sprite = null
 let projectile: Sprite = null
+let statusbar: StatusBarSprite = null
 let mySprite: Sprite = null
 let face = 0
 info.setLife(5)
@@ -323,8 +325,10 @@ let boss1 = sprites.create(img`
     ................
     ................
     ................
-    `, SpriteKind.boss)
+    `, SpriteKind.Enemy)
 boss1.setPosition(20, 20)
+statusbar = statusbars.create(20, 4, StatusBarKind.Health)
+statusbar.attachToSprite(boss1)
 game.onUpdateInterval(5000, function () {
     projectile2 = sprites.createProjectileFromSprite(img`
         . . . . . . . . . . . . . . . . 
@@ -344,7 +348,8 @@ game.onUpdateInterval(5000, function () {
         . . . . . . . . . . . . . . . . 
         . . . . . . . . . . . . . . . . 
         `, boss1, 50, 100)
-    projectile2.y += 8
+    projectile2.setKind(SpriteKind.Text)
+    projectile2.y += 12
     projectile2 = sprites.createProjectileFromSprite(img`
         . . . . . . . . . . . . . . . . 
         . . . . . . . . . . . . . . . . 
@@ -363,7 +368,8 @@ game.onUpdateInterval(5000, function () {
         . . . . . . . . . . . . . . . . 
         . . . . . . . . . . . . . . . . 
         `, boss1, 30, 100)
-    projectile2.y += 8
+    projectile2.setKind(SpriteKind.Text)
+    projectile2.y += 12
     projectile2 = sprites.createProjectileFromSprite(img`
         . . . . . . . . . . . . . . . . 
         . . . . . . . . . . . . . . . . 
@@ -382,7 +388,8 @@ game.onUpdateInterval(5000, function () {
         . . . . . . . . . . . . . . . . 
         . . . . . . . . . . . . . . . . 
         `, boss1, -50, 100)
-    projectile2.y += 8
+    projectile2.setKind(SpriteKind.Text)
+    projectile2.y += 12
     projectile2 = sprites.createProjectileFromSprite(img`
         . . . . . . . . . . . . . . . . 
         . . . . . . . . . . . . . . . . 
@@ -401,7 +408,8 @@ game.onUpdateInterval(5000, function () {
         . . . . . . . . . . . . . . . . 
         . . . . . . . . . . . . . . . . 
         `, boss1, -30, 100)
-    projectile2.y += 8
+    projectile2.setKind(SpriteKind.Text)
+    projectile2.y += 12
     projectile2 = sprites.createProjectileFromSprite(img`
         . . . . . . . . . . . . . . . . 
         . . . . . . . . . . . . . . . . 
@@ -420,7 +428,8 @@ game.onUpdateInterval(5000, function () {
         . . . . . . . . . . . . . . . . 
         . . . . . . . . . . . . . . . . 
         `, boss1, 0, 100)
-    projectile2.y += 8
+    projectile2.setKind(SpriteKind.Text)
+    projectile2.y += 12
 })
 game.onUpdateInterval(400, function () {
     if (mySprite.x > boss1.x) {
@@ -619,7 +628,8 @@ game.onUpdateInterval(10000, function () {
                 . . . . . . . . . . . . . . . . 
                 . . . . . . . . . . . . . . . . 
                 `, boss1, -100, 0)
-            projectile2.x += -8
+            projectile2.setKind(SpriteKind.Text)
+            projectile2.x += -12
             projectile2 = sprites.createProjectileFromSprite(img`
                 . . . . . . . . . . . . . . . . 
                 . . . . . . . . . . . . . . . . 
@@ -638,7 +648,8 @@ game.onUpdateInterval(10000, function () {
                 . . . . . . . . . . . . . . . . 
                 . . . . . . . . . . . . . . . . 
                 `, boss1, 100, 0)
-            projectile2.x += 8
+            projectile2.setKind(SpriteKind.Text)
+            projectile2.x += 12
             timer.after(2000, function () {
                 boss1.y = 20
             })
